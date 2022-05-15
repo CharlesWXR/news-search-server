@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.njnu.newssearchserver.mapper.CorpusResultMapper">
+    <select id="getCorpusByWord" resultMap="corpusResultMap">
+        SELECT
+            c.word AS `word`,
+            c.description AS `description`,
+            c.sample AS `sample`,
+            c.imgsrc AS `imgsrc`,
+            t.fulltext AS `fulltext`
+        FROM corpus c LEFT JOIN corpus_fulltext t
+        ON c.fulltext_id = t.id
+        WHERE c.word = #{word}
+    </select>
+
+    <select id="blurQueryByWord" resultMap="corpusResultMap">
+        SELECT
+            c.word AS `word`,
+            c.description AS `description`,
+            c.sample AS `sample`,
+            c.imgsrc AS `imgsrc`,
+            t.fulltext AS `fulltext`
+        FROM corpus c LEFT JOIN corpus_fulltext t
+        ON c.fulltext_id = t.id
+        WHERE c.word LIKE CONCAT('%',#{word},'%')
+    </select>
+
+    <select id="fulltextQuery" resultType="java.lang.String">
+        SELECT
+            t.fulltext AS `fulltext`
+        FROM corpus c JOIN corpus_fulltext t
+        ON c.fulltext_id = t.id
+        WHERE c.word = #{word}
+    </select>
+
+    <resultMap id="corpusResultMap" type="cn.edu.njnu.newssearchserver.pojo.Corpus">
+        <result property="fulltext" column="fulltext" />
+        <association property="corpus" javaType="cn.edu.njnu.newssearchserver.pojo.CorpusResult">
+            <result property="word" column="word" />
+            <result property="description" column="description" />
+            <result property="sample" column="sample" />
+            <result property="imgsrc" column="imgsrc" />
+        </association>
+    </resultMap>
+</mapper>

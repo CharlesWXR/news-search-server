@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.njnu.newssearchserver.mapper.NewWordMapper">
+    <select id="searchAllByYear" resultMap="newWordDescriptionMapper">
+    SELECT
+	    w.word AS word,
+	    w.explanation AS explanation,
+	    t.title AS title
+    FROM newword w JOIN newword_title t ON w.title_id = t.id
+    WHERE t.`year` = #{year};
+    </select>
+    <resultMap id="newWordDescriptionMapper" type="cn.edu.njnu.newssearchserver.pojo.NewWordDescription">
+        <result property="title" column="title" />
+        <result property="word" column="word" />
+        <result property="explanation" column="explanation" />
+    </resultMap>
+</mapper>
